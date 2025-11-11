@@ -1,0 +1,17 @@
+# Maven #
+.DS_Store
+target/
+
+logs
+
+# IDEA #
+.idea/
+*.iml
+
+# Eclipse #
+.settings/
+.classpath
+.project
+
+
+/logs

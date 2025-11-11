@@ -1,0 +1,70 @@
+server:
+  port: 8089 # ??????
+
+spring:
+  cassandra:
+    contact-points: 127.0.0.1 # Cassandra 集群节点地址（可配置多个，用逗号分隔）
+    port: 9042 # 端口号
+    local-datacenter: datacenter1 # 必须与集群配置的数据中心名称一致（大小写敏感）
+  ai:
+    chat:
+      memory:
+        repository:
+          cassandra:
+            keyspace: xinghen_ai_robot # 指定存储聊天记忆的 Keyspace（类似数据库名）
+            table: t_ai_chat_memory # 表名
+            time-to-live: 1095d # 数据的自动过期时间（1095天 ≈ 3年）
+            initialize-schema: true  # 自动初始化表结构
+    deepseek:
+      api-key: sk-9651f102165b42e0ad51d48776ced90a # DeepSeek Api Key
+      base-url: https://api.deepseek.com # DeepSeek ??? URL, ???????? api.deepseek.com
+      chat:
+        options:
+          model: deepseek-chat # deepseek-chat ?? DeepSeek-V3 ???deepseek-reasoner ?? DeepSeek-R1 ???
+          temperature: 0.8 # ??? 0??--1???
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          model: qwen3:14b # 模型
+          temperature: 0.7 # 温度值
+    zhipuai:
+      base-url: https://open.bigmodel.cn/api/paas # 智谱 AI 的请求 URL, 可不填，默认值为 open.bigmodel.cn/api/paas
+      api-key: db168492dbf34ed7909246b354a0156d.JPTygB7I3VD4KJLQ
+      chat:
+        options:
+          model: glm-4-air
+          temperature: 0.7
+#    openai:
+#      base-url: https://api.zhizengzeng.com/v1 # OpenAI 服务的访问地址，这里使用的第三方代理商：智增增
+#      api-key: sk-zk279d23454590685a369b2cc621846c68568f0a5098869d
+#      chat:
+#        options:
+#          model: gpt-4o
+#          temperature: 0.7
+    openai:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode # OpenAI 服务的访问地址，这里使用的是阿里云百炼
+      api-key: sk-6f32d8a94d21473fbb795c115253c7eb
+      chat:
+        options:
+#          model: qwen-turbo
+          model: qwen-omni-turbo
+          temperature: 0.7
+#    mcp:
+#      client:
+#        stdio:
+#          servers-configuration: classpath:/mcp-servers-config.json # 指定 MCP 服务的配置文件路径
+#        toolcallback:
+#          enabled: true # 开启 MCP 客户端的工具回调（Tool Callback）功能
+    mcp:
+     client:
+      type: sync # 客户端使用同步通信模式
+      request-timeout: 20s # 设置单次请求超时时间
+      sse: # SSE (Server-Sent Events) 流式响应配置
+        connections: # 定义 SSE 连接端点
+          qq-mcp-server: # 自定义连接名称（可任意命名）
+            url: http://localhost:8000 # MCP 服务实际地址
+
+logging:
+  level:
+    org.springframework.ai.chat.client.advisor: debug
